@@ -30,7 +30,7 @@ namespace WX.Core
         /// <param name="nonce"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        private static string GetSignature(string timestamp, string nonce, string token)
+        public static string GetSignature(string timestamp, string nonce, string token)
         {
             var arrParam = new[] { token, timestamp, nonce }.OrderBy(p => p).ToArray();
             string strArrParam = string.Join("", arrParam);

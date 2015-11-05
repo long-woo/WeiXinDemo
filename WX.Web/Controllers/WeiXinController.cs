@@ -25,7 +25,7 @@ namespace WX.Web.Controllers
                 {
                     return echostr;
                 }
-                return "接入微信失败";
+                return "接入微信失败（详细信息：" + signature + "与" + CheckSignature.GetSignature(timestamp, nonce, TOKEN) + "）不一致";
             }).ContinueWith<ActionResult>(t => Content(t.Result));
         }
 
