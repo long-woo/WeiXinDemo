@@ -63,7 +63,7 @@
     <Compile Include="WXApi.cs" />
     <Compile Include="WXBizMsgCrypt.cs" />
     <Compile Include="WXLog.cs" />
-    <Compile Include="WXTextMessageModel.cs" />
+    <Compile Include="WXReceiveMessageModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
