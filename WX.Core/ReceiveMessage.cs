@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -27,7 +28,8 @@ namespace WX.Core
                 if (message.Event == "subscribe")
                 {
                     string content = "欢迎关注Huba！";
-                    SendTextMessage(message, content);
+                    string result = SendTextMessage(message, content);
+                    HttpContext.Current.Response.Write(result);
                 }
             }
             else
@@ -60,10 +62,12 @@ namespace WX.Core
         /// </summary>
         /// <param name="message"></param>
         /// <param name="content"></param>
-        public static void SendTextMessage(WXReceiveMessageModel message, string content)
+        /// <returns></returns>
+        public static string SendTextMessage(WXReceiveMessageModel message, string content)
         {
-            string textMsg = string.Format("<xml><ToUserName><![CDATA[{0}]]></ToUserName><FromUserName><![CDATA[{1}]]></FromUserName><CreateTime>{2}</CreateTime><MsgType><![CDATA[{3}]]></MsgType><Content><![CDATA[{4}]]></Content></xml>", message.FromUserName, message.ToUserName, message.CreateTime, ReceiveMessageTypeEnum.Text,content);
+            string textMsg = string.Format("<xml><ToUserName><![CDATA[{0}]]></ToUserName><FromUserName><![CDATA[{1}]]></FromUserName><CreateTime>{2}</CreateTime><MsgType><![CDATA[{3}]]></MsgType><Content><![CDATA[{4}]]></Content></xml>", message.FromUserName, message.ToUserName, message.CreateTime, ReceiveMessageTypeEnum.Text, content);
 
+            return textMsg;
         }
     }
 }
