@@ -23,7 +23,7 @@ namespace WX.Core
         {
             var message = GetWXMessage(xmlDoc);
 
-            if (message.MsgType == Convert.ToString(ReceiveMessageTypeEnum.Event))
+            if (message.MsgType == "event")
             {
                 if (message.Event == "subscribe")
                 {
@@ -65,7 +65,7 @@ namespace WX.Core
         /// <returns></returns>
         public static string SendTextMessage(WXReceiveMessageModel message, string content)
         {
-            string textMsg = string.Format("<xml><ToUserName><![CDATA[{0}]]></ToUserName><FromUserName><![CDATA[{1}]]></FromUserName><CreateTime>{2}</CreateTime><MsgType><![CDATA[{3}]]></MsgType><Content><![CDATA[{4}]]></Content></xml>", message.FromUserName, message.ToUserName, message.CreateTime, ReceiveMessageTypeEnum.Text, content);
+            string textMsg = string.Format("<xml><ToUserName><![CDATA[{0}]]></ToUserName><FromUserName><![CDATA[{1}]]></FromUserName><CreateTime>{2}</CreateTime><MsgType><![CDATA[{3}]]></MsgType><Content><![CDATA[{4}]]></Content></xml>", message.FromUserName, message.ToUserName, DateTime.Now.Ticks, "text", content);
 
             return textMsg;
         }
