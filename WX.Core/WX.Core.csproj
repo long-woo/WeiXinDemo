@@ -59,9 +59,11 @@
     <Compile Include="Cryptography.cs" />
     <Compile Include="ReceiveMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReceiveMessageEnum.cs" />
     <Compile Include="WXApi.cs" />
     <Compile Include="WXBizMsgCrypt.cs" />
     <Compile Include="WXLog.cs" />
+    <Compile Include="WXTextMessageModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

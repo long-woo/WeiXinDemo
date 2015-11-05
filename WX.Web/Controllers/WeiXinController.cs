@@ -21,7 +21,8 @@ namespace WX.Web.Controllers
         private static readonly string APPID = WebConfigurationManager.AppSettings["WXAPPID"];
 
         // GET: WeiXin
-        public Task<ActionResult> Index(string signature, string timestamp, string nonce, string echostr)
+        [ActionName("Index")]
+        public Task<ActionResult> Get(string signature, string timestamp, string nonce, string echostr)
         {
             return Task.Factory.StartNew(() =>
             {
@@ -35,7 +36,8 @@ namespace WX.Web.Controllers
         }
 
         [HttpPost]
-        public Task<ActionResult> Index(string signature, string timestamp, string nonce, string echostr)
+        [ActionName("Index")]
+        public Task<ActionResult> Post(string signature, string timestamp, string nonce, string echostr)
         {
             return Task.Factory.StartNew(() =>
             {
@@ -43,9 +45,11 @@ namespace WX.Web.Controllers
                 {
                     return "参数错误";
                 }
+
                 StreamReader stream = new StreamReader(Request.InputStream, System.Text.Encoding.UTF8);
-                XElement xml = XElement.Load(stream);
-                 
+                XDocument xmlDoc = XDocument.Load(stream);
+                ReceiveMessage.HandleWXMessage(xmlDoc);
+
                 return "Token验证失败";
             }).ContinueWith<ActionResult>(t => Content(t.Result));
         }
