@@ -36,15 +36,15 @@ namespace WX.Core
             string strArrParam = string.Join("", arrParam);
             var sha1 = SHA1.Create();
             var btSha1 = sha1.ComputeHash(Encoding.UTF8.GetBytes(strArrParam));
-            //return Convert.ToBase64String(btSha1);
+            return Convert.ToBase64String(btSha1).ToUpper();
 
-            StringBuilder enText = new StringBuilder();
-            foreach (var b in btSha1)
-            {
-                enText.AppendFormat("{0:x2}", b);
-            }
+            //StringBuilder enText = new StringBuilder();
+            //foreach (var b in btSha1)
+            //{
+            //    enText.AppendFormat("{0:x2}", b);
+            //}
 
-            return enText.ToString();
+            //return enText.ToString();
         }
     }
 }
