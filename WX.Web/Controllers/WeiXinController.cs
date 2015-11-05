@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
+using System.Xml;
 using WX.Core;
+using System.Xml.Linq;
 
 namespace WX.Web.Controllers
 {
@@ -25,20 +29,25 @@ namespace WX.Web.Controllers
                 {
                     return echostr;
                 }
+
                 return "接入微信失败";
             }).ContinueWith<ActionResult>(t => Content(t.Result));
         }
 
-        //public ActionResult Index(string signature, string timestamp, string nonce, string echostr)
-        //{
-        //    if (CheckSignature.ValidateSignature(signature, timestamp, nonce, echostr, TOKEN))
-        //    {
-        //        return Content(echostr);
-        //    }
-        //    return Content("接入微信失败");
-        //}
-
-        //[HttpPost]
-        //public Task<ActionResult> Index()
+        [HttpPost]
+        public Task<ActionResult> Index(string signature, string timestamp, string nonce, string echostr)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                if (!CheckSignature.ValidateSignature(signature, timestamp, nonce, echostr, TOKEN))
+                {
+                    return "参数错误";
+                }
+                StreamReader stream = new StreamReader(Request.InputStream, System.Text.Encoding.UTF8);
+                XElement xml = XElement.Load(stream);
+                 
+                return "Token验证失败";
+            }).ContinueWith<ActionResult>(t => Content(t.Result));
+        }
     }
 }
