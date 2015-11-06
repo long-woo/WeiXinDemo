@@ -48,7 +48,7 @@ namespace WX.Web.Controllers
 
                 StreamReader stream = new StreamReader(Request.InputStream, System.Text.Encoding.UTF8);
                 XDocument xmlDoc = XDocument.Load(stream);
-
+                WXLog.WriteLog("222222222222222222222");
                 return ReceiveMessage.HandleWXMessage(xmlDoc);
             }).ContinueWith<ActionResult>(t => Content(t.Result));
         }
