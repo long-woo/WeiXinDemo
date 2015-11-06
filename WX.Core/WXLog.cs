@@ -13,8 +13,8 @@ namespace WX.Core
         public static void WriteLog(string text)
         {
             string htmlTemp = string.Format("=========日志信息========\r",text); //string.Format("<!DOCTYPE html><html lang=\"zh-cn\"><head><meta charset=\"utf-8\"/><title>微信日志记录</title></head><body>{0}</body></html>", text);
-            const string foldName = "wxlog";
-            string targetName = DateTime.Now.ToString("yyyy-MM-dd");
+            const string foldName = "App_Data";//"wxlog";
+            string targetName = DateTime.Now.ToString("yyyyMMdd");
             string fileName = "1"; //DateTime.Now.ToString("yyyyMMddHHmmss");
             string logPath = HttpContext.Current.Server.MapPath(string.Format("~/{0}/{1}", foldName, targetName));
             if (!Directory.Exists(logPath))
