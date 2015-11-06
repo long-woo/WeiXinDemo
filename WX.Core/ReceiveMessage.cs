@@ -23,21 +23,27 @@ namespace WX.Core
         public static string HandleWXMessage(XDocument xmlDoc)
         {
             string result = "";
-            var message = GetWXMessage(xmlDoc);
-
-            if (message.MsgType == "event")
+            try
             {
-                if (message.Event == "subscribe")
+                var message = GetWXMessage(xmlDoc);
+                if (message.MsgType == "event")
                 {
-                    string content = "欢迎关注Huba！";
-                    result = SendTextMessage(message, content);
+                    if (message.Event == "subscribe")
+                    {
+                        string content = "欢迎关注Huba！";
+                        result = SendTextMessage(message, content);
+                    }
+                }
+                else
+                {
+
                 }
             }
-            else
+            catch (Exception ex)
             {
-
+                WXLog.WriteLog("异常信息：" + ex.Message);
             }
-            WXLog.WriteLog(result);
+
             return result;
         }
 
@@ -47,7 +53,7 @@ namespace WX.Core
         /// <param name="xmlDoc"></param>
         public static WXReceiveMessageModel GetWXMessage(XDocument xmlDoc)
         {
-            var message = (from m in xmlDoc.Element("xml").Elements()
+            var message = (from m in xmlDoc.Descendants()
                            select new WXReceiveMessageModel
                            {
                                ToUserName = m.Element("ToUserName").Value,

@@ -41,7 +41,7 @@ namespace WX.Web.Controllers
         {
             return Task.Factory.StartNew(() =>
             {
-                WXLog.WriteLog("纪录日志开始" + signature);
+
                 if (!CheckSignature.ValidateSignature(signature, timestamp, nonce, echostr, TOKEN))
                 {
                     return "参数错误";
@@ -49,7 +49,7 @@ namespace WX.Web.Controllers
 
                 StreamReader stream = new StreamReader(Request.InputStream, System.Text.Encoding.UTF8);
                 XDocument xmlDoc = XDocument.Load(stream);
-                WXLog.WriteLog("解析开始");
+
                 return ReceiveMessage.HandleWXMessage(xmlDoc);
             }).ContinueWith<ActionResult>(t => Content(t.Result));
         }

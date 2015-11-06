@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WX.Web", "WX.Web\WX.Web.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WX.Core", "WX.Core\WX.Core.csproj", "{0A579926-FAD7-402E-AE42-4011CC05F594}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WXTest", "WXTest\WXTest.csproj", "{D093E1C1-4452-43E0-B603-8D04AF5BC012}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0A579926-FAD7-402E-AE42-4011CC05F594}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A579926-FAD7-402E-AE42-4011CC05F594}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A579926-FAD7-402E-AE42-4011CC05F594}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D093E1C1-4452-43E0-B603-8D04AF5BC012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D093E1C1-4452-43E0-B603-8D04AF5BC012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D093E1C1-4452-43E0-B603-8D04AF5BC012}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D093E1C1-4452-43E0-B603-8D04AF5BC012}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

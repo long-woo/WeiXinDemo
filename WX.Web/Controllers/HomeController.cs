@@ -10,6 +10,7 @@ namespace WX.Web.Controllers
     {
         public ActionResult Index()
         {
+            WX.Core.WXLog.WriteLog("111111");
             return View();
         }
 
