@@ -16,17 +16,17 @@ namespace WX.Core
             const string foldName = "wxlog";
             string targetName = DateTime.Now.ToString("yyyy-MM-dd");
             string fileName = "1"; //DateTime.Now.ToString("yyyyMMddHHmmss");
-            string logPath = HttpContext.Current.Server.MapPath(string.Format("~/{0}/{1}/", foldName, targetName));
+            string logPath = HttpContext.Current.Server.MapPath(string.Format("~/{0}/{1}", foldName, targetName));
             if (!Directory.Exists(logPath))
             {
                 Directory.CreateDirectory(logPath);
             }
 
-            if (!File.Exists(fileName + ".txt"))
+            if (!File.Exists(logPath + "/" + fileName + ".txt"))
             {
-                File.CreateText(fileName + ".txt").Close();
+                File.CreateText(logPath + "/" + fileName + ".txt").Close();
             }
-            using (StreamWriter writer = new StreamWriter(logPath + fileName + ".txt", false, Encoding.UTF8))
+            using (StreamWriter writer = new StreamWriter(logPath + "/" + fileName + ".txt", false, Encoding.UTF8))
             {
                 writer.BaseStream.Seek(0, SeekOrigin.Begin);
                 writer.Write(htmlTemp);
