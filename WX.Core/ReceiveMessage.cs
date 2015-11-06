@@ -37,7 +37,7 @@ namespace WX.Core
             {
 
             }
-
+            WXLog.WriteLog(result);
             return result;
         }
 
