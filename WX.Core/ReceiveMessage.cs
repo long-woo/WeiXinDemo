@@ -22,7 +22,7 @@ namespace WX.Core
         public static void HandleWXMessage(XDocument xmlDoc)
         {
             var message = GetWXMessage(xmlDoc);
-
+            WXLog.WriteLog("消息类型：" + message.MsgType + "事件：" + message.Event);
             if (message.MsgType == "event")
             {
                 if (message.Event == "subscribe")
