@@ -12,7 +12,7 @@ namespace WX.Core
     {
         public static void WriteLog(string text)
         {
-            string htmlTemp = string.Format("<!DOCTYPE html><html lang=\"zh-cn\"><head><meta charset=\"utf-8\"/><title>微信日志记录</title></head><body>{0}</body></html>", text);
+            string htmlTemp = string.Format("=========日志信息========\r",text); //string.Format("<!DOCTYPE html><html lang=\"zh-cn\"><head><meta charset=\"utf-8\"/><title>微信日志记录</title></head><body>{0}</body></html>", text);
             const string foldName = "wxlog";
             string targetName = DateTime.Now.ToString("yyyy-MM-dd");
             string fileName = "1"; //DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -22,11 +22,11 @@ namespace WX.Core
                 Directory.CreateDirectory(logPath);
             }
 
-            if (!File.Exists(fileName + ".html"))
+            if (!File.Exists(fileName + ".txt"))
             {
-                File.CreateText(fileName + ".html").Close();
+                File.CreateText(fileName + ".txt").Close();
             }
-            using (StreamWriter writer = new StreamWriter(logPath + fileName + ".html", false, Encoding.UTF8))
+            using (StreamWriter writer = new StreamWriter(logPath + fileName + ".txt", false, Encoding.UTF8))
             {
                 writer.BaseStream.Seek(0, SeekOrigin.Begin);
                 writer.Write(htmlTemp);
