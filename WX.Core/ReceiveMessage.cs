@@ -37,7 +37,7 @@ namespace WX.Core
             {
 
             }
-            WXLog.WriteLog(result);
+            xmlDoc.Save(HttpContext.Current.Server.MapPath("~/App_Data/" + DateTime.Now.Ticks + "_Request_" + message.MsgType + ".txt"));
             return result;
         }
 
