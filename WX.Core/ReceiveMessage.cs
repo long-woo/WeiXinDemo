@@ -19,23 +19,26 @@ namespace WX.Core
         /// 处理接收微信消息
         /// </summary>
         /// <param name="xmlDoc"></param>
-        public static void HandleWXMessage(XDocument xmlDoc)
+        /// <returns></returns>
+        public static string HandleWXMessage(XDocument xmlDoc)
         {
+            string result = "";
             var message = GetWXMessage(xmlDoc);
-            WXLog.WriteLog("消息类型：" + message.MsgType + "事件：" + message.Event);
+
             if (message.MsgType == "event")
             {
                 if (message.Event == "subscribe")
                 {
                     string content = "欢迎关注Huba！";
-                    string result = SendTextMessage(message, content);
-                    HttpContext.Current.Response.Write(result);
+                    result = SendTextMessage(message, content);
                 }
             }
             else
             {
 
             }
+
+            return result;
         }
 
         /// <summary>

@@ -48,9 +48,8 @@ namespace WX.Web.Controllers
 
                 StreamReader stream = new StreamReader(Request.InputStream, System.Text.Encoding.UTF8);
                 XDocument xmlDoc = XDocument.Load(stream);
-                ReceiveMessage.HandleWXMessage(xmlDoc);
 
-                return "Token验证失败";
+                return ReceiveMessage.HandleWXMessage(xmlDoc);
             }).ContinueWith<ActionResult>(t => Content(t.Result));
         }
     }
