@@ -1,0 +1,31 @@
+﻿{
+    "touser": "OPENID",
+    "template_id": "7IpY-Mv-Obi9l4dJ8GP_wGCjMcXxHlpwMcC-dwVsO-U",
+    "url": "http://baidu.com",
+    "data": {
+        "first": {
+            "value": "嗖嗖嗖，您的证照和回执已发货，我们正加速送到您的手上。",
+            "color": "#173177"
+        },
+        "keynote1": {
+            "value": "证件照 （居民身份证）",
+            "color": "#173177"
+        },
+        "keynote2": {
+            "value": "顺丰即日达",
+            "color": "#173177"
+        },
+        "keynote3": {
+            "value": "XW5244030005646",
+            "color": "#173177"
+        },
+        "keynote4": {
+            "value": "陈璐 广东省 广州市 天河区 科韵北路112号请您耐心等候。",
+            "color": "#173177"
+        },
+        "remark": {
+            "value": "欢迎您使用顺丰快递",
+            "color": "#173177"
+        }
+    }
+}

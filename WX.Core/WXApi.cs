@@ -13,13 +13,19 @@ namespace WX.Core
     public class WXApi
     {
 
+        public static string AccessToken { get; set; }
+
+        public static int AccessTokenExpireTime { get; set; }
+
+        public static DateTime LastTime { get; set; }
+
         /// <summary>
         /// 获取Access Token
         /// </summary>
         /// <param name="appId">应用Id</param>
         /// <param name="appSecret">应用密钥</param>
         /// <returns></returns>
-        public static async Task<JObject> GetAccessTokenAsync(string appId, string appSecret)
+        public static async Task<string> GetAccessTokenAsync(string appId, string appSecret)
         {
             HttpClient httpClient = new HttpClient();
 
@@ -29,7 +35,16 @@ namespace WX.Core
             response.EnsureSuccessStatusCode();
             string result = await response.Content.ReadAsStringAsync();
 
-            return JObject.Parse(result);
+            return result;
+        }
+
+        public async static Task RefreshAccessToken(string appId, string appSecret)
+        {
+            DateTime expireTime = LastTime.AddSeconds((double)AccessTokenExpireTime);
+            if (DateTime.Now >= expireTime)
+            {
+                await GetAccessTokenAsync(appId, appSecret);
+            }
         }
 
         /// <summary>
@@ -38,7 +53,7 @@ namespace WX.Core
         /// <param name="accessToken"></param>
         /// <param name="postJson"></param>
         /// <returns></returns>
-        public static async Task<JObject> CreateMenuAsync(string accessToken, string postJson)
+        public static async Task<string> CreateMenuAsync(string accessToken, string postJson)
         {
             HttpClient httpClient = new HttpClient();
 
@@ -50,7 +65,7 @@ namespace WX.Core
             response.EnsureSuccessStatusCode();
             string result = await response.Content.ReadAsStringAsync();
 
-            return JObject.Parse(result);
+            return result;
         }
 
         /// <summary>
@@ -58,7 +73,7 @@ namespace WX.Core
         /// </summary>
         /// <param name="accessToken"></param>
         /// <returns></returns>
-        public static async Task<JObject> GetMenuAsync(string accessToken)
+        public static async Task<string> GetMenuAsync(string accessToken)
         {
             HttpClient httpClient = new HttpClient();
 
@@ -68,7 +83,7 @@ namespace WX.Core
             response.EnsureSuccessStatusCode();
             string result = await response.Content.ReadAsStringAsync();
 
-            return JObject.Parse(result);
+            return result;
         }
 
         /// <summary>
@@ -76,7 +91,7 @@ namespace WX.Core
         /// </summary>
         /// <param name="accessToken"></param>
         /// <returns></returns>
-        public static async Task<JObject> DeleteMenuAsync(string accessToken)
+        public static async Task<string> DeleteMenuAsync(string accessToken)
         {
             HttpClient httpClient = new HttpClient();
 
@@ -86,7 +101,64 @@ namespace WX.Core
             response.EnsureSuccessStatusCode();
             string result = await response.Content.ReadAsStringAsync();
 
-            return JObject.Parse(result);
+            return result;
         }
+
+        /// <summary>
+        /// 获取模板消息Id
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <param name="postJson"></param>
+        /// <returns></returns>
+        public async static Task<string> GetMessageTemplateId(string accessToken, string postJson)
+        {
+            HttpClient httpClient = new HttpClient();
+            string uriString = string.Format(WebConfigurationManager.AppSettings["GETMESSAGETEMPLATEID"] + "?access_token={0}", accessToken);
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            Uri requestUri = new Uri(uriString);
+            HttpContent content = new StringContent(postJson);
+            HttpResponseMessage response = await httpClient.PostAsync(requestUri, content);
+            response.EnsureSuccessStatusCode();
+            string result = await response.Content.ReadAsStringAsync();
+
+            return result;
+        }
+
+        /// <summary>
+        /// 发送模板消息
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <param name="postJson"></param>
+        /// <returns></returns>
+        public async static Task<string> SendTemplateMessageAsync(string accessToken, string postJson)
+        {
+            HttpClient httpClient = new HttpClient();
+
+            string uriString = string.Format(WebConfigurationManager.AppSettings["SENDTEMPLATEMESSAGE"] + "?access_token={0}", accessToken);
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            Uri requestUri = new Uri(uriString);
+            HttpContent content = new StringContent(postJson);
+            HttpResponseMessage response = await httpClient.PostAsync(requestUri, content);
+            response.EnsureSuccessStatusCode();
+            string result = await response.Content.ReadAsStringAsync();
+
+            return result;
+        }
+
+        public async static Task<string> SetMessageTemplate(string accessToken, string postJson)
+        {
+            HttpClient httpClient = new HttpClient();
+
+            string uriString = string.Format(WebConfigurationManager.AppSettings["SETMESSAGETEMPLATE"] + "?access_token={0}", accessToken);
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            Uri requestUri = new Uri(uriString);
+            HttpContent content = new StringContent(postJson);
+            HttpResponseMessage response = await httpClient.PostAsync(requestUri, content);
+            response.EnsureSuccessStatusCode();
+            string result = await response.Content.ReadAsStringAsync();
+
+            return result;
+        }
+
     }
 }

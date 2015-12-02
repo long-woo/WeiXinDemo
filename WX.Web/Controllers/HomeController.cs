@@ -1,31 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-
-namespace WX.Web.Controllers
+﻿namespace WX.Web.Controllers
 {
+    using System.Web.Mvc;
+    using WX.Core;
+
     public class HomeController : Controller
     {
-        public ActionResult Index()
-        {
-            WX.Core.WXLog.WriteLog("111111");
-            return View();
-        }
-
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            ((dynamic) base.ViewBag).Message = "Your application description page.";
+            return base.View();
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ((dynamic) base.ViewBag).Message = "Your contact page.";
+            return base.View();
+        }
 
-            return View();
+        public ActionResult Index()
+        {
+            WXLog.WriteLog("111111");
+            return base.View();
         }
     }
 }
+

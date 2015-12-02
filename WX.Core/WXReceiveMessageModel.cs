@@ -36,5 +36,10 @@ namespace WX.Core
         /// 事件类型
         /// </summary>
         public string Event { get; set; }
+
+        /// <summary>
+        /// 事件key
+        /// </summary>
+        public string EventKey { get; set; }
     }
 }

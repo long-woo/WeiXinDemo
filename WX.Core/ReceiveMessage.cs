@@ -22,29 +22,30 @@ namespace WX.Core
         /// <returns></returns>
         public static string HandleWXMessage(XDocument xmlDoc)
         {
-            string result = "";
+            string str = "";
             try
             {
-                var message = GetWXMessage(xmlDoc);
-                if (message.MsgType == "event")
+                WXReceiveMessageModel wXMessage = GetWXMessage(xmlDoc);
+                if (wXMessage.MsgType != "event")
                 {
-                    if (message.Event == "subscribe")
-                    {
-                        string content = "欢迎关注Huba！";
-                        result = SendTextMessage(message, content);
-                    }
+                    return str;
                 }
-                else
+                if (wXMessage.Event == "subscribe")
                 {
-
+                    string content = "谢谢你关注物盟盟测试公众号！";
+                    str = SendTextMessage(wXMessage, content);
+                }
+                if ((wXMessage.Event == "CLICK") && (wXMessage.EventKey == "MENU_GOOD"))
+                {
+                    string str3 = "谢谢你的赞";
+                    str = SendTextMessage(wXMessage, str3);
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                WXLog.WriteLog("异常信息：" + ex.Message);
+                WXLog.WriteLog("异常信息：" + exception.Message);
             }
-
-            return result;
+            return str;
         }
 
         /// <summary>

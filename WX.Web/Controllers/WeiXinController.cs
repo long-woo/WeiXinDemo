@@ -1,57 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
-using System.Xml;
-using WX.Core;
 using System.Xml.Linq;
+using WX.Core;
 
 namespace WX.Web.Controllers
 {
     public class WeiXinController : Controller
     {
-
-        private static readonly string TOKEN = WebConfigurationManager.AppSettings["WXTOKEN"];
-        private static readonly string ENCODINGAESKEY = WebConfigurationManager.AppSettings["WXENCODINGAESKEY"];
         private static readonly string APPID = WebConfigurationManager.AppSettings["WXAPPID"];
+        private static readonly string ENCODINGAESKEY = WebConfigurationManager.AppSettings["WXENCODINGAESKEY"];
+        private static readonly string TOKEN = WebConfigurationManager.AppSettings["WXTOKEN"];
 
-        // GET: WeiXin
         [ActionName("Index")]
         public Task<ActionResult> Get(string signature, string timestamp, string nonce, string echostr)
         {
-            return Task.Factory.StartNew(() =>
-            {
+            return Task.Factory.StartNew<string>(delegate {
                 if (CheckSignature.ValidateSignature(signature, timestamp, nonce, echostr, TOKEN))
                 {
                     return echostr;
                 }
-
                 return "接入微信失败";
-            }).ContinueWith<ActionResult>(t => Content(t.Result));
+            }).ContinueWith<ActionResult>(t => base.Content(t.Result));
         }
 
-        [HttpPost]
-        [ActionName("Index")]
+        [HttpPost, ActionName("Index")]
         public Task<ActionResult> Post(string signature, string timestamp, string nonce, string echostr)
         {
-            return Task.Factory.StartNew(() =>
-            {
-
+            return Task.Factory.StartNew<string>(delegate {
                 if (!CheckSignature.ValidateSignature(signature, timestamp, nonce, echostr, TOKEN))
                 {
                     return "参数错误";
                 }
-
-                StreamReader stream = new StreamReader(Request.InputStream, System.Text.Encoding.UTF8);
-                XDocument xmlDoc = XDocument.Load(stream);
-
-                return ReceiveMessage.HandleWXMessage(xmlDoc);
-            }).ContinueWith<ActionResult>(t => Content(t.Result));
+                StreamReader textReader = new StreamReader(this.Request.InputStream, Encoding.UTF8);
+                return ReceiveMessage.HandleWXMessage(XDocument.Load(textReader));
+            }).ContinueWith<ActionResult>(t => base.Content(t.Result));
         }
     }
 }
+
