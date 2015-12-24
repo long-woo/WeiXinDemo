@@ -25,19 +25,29 @@ namespace WX.Core
         /// <param name="appId">应用Id</param>
         /// <param name="appSecret">应用密钥</param>
         /// <returns></returns>
-        public static async Task<string> GetAccessTokenAsync(string appId, string appSecret)
+        public async static Task GetAccessTokenAsync(string appId, string appSecret)
         {
             HttpClient httpClient = new HttpClient();
-
-            string strUrl = string.Format(WebConfigurationManager.AppSettings["ACCESStOKEN"] + "?grant_type=client_credential&appid={0}&secret={1}", appId, appSecret);
-            var strUri = new Uri(strUrl);
-            HttpResponseMessage response = await httpClient.GetAsync(strUri);
+            string uriString = string.Format(WebConfigurationManager.AppSettings["ACCESStOKEN"] + "?grant_type=client_credential&appid={0}&secret={1}", appId, appSecret);
+            Uri requestUri = new Uri(uriString);
+            HttpResponseMessage response = await httpClient.GetAsync(requestUri);
             response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
-
-            return result;
+            string json = await response.Content.ReadAsStringAsync();
+            if (!json.Contains("errcode"))
+            {
+                JObject obj2 = JObject.Parse(json);
+                AccessToken = obj2["access_token"].ToString();
+                AccessTokenExpireTime = int.Parse(obj2["expires_in"].ToString());
+                LastTime = DateTime.Now;
+            }
         }
 
+        /// <summary>
+        /// 刷新 access token 
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="appSecret"></param>
+        /// <returns></returns>
         public async static Task RefreshAccessToken(string appId, string appSecret)
         {
             DateTime expireTime = LastTime.AddSeconds((double)AccessTokenExpireTime);
