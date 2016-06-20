@@ -129,8 +129,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="App_Code\menu.json" />
-    <Content Include="App_Code\templateMessage.json" />
+    <None Include="App_Code\menu.json" />
+    <None Include="App_Code\templateMessage.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
