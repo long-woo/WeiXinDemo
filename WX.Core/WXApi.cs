@@ -7,17 +7,27 @@ using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using System.Web.Configuration;
 using System.Net.Http.Headers;
+using WX.Common;
 
 namespace WX.Core
 {
     public class WXApi
     {
 
-        public static string AccessToken { get; set; }
+        /// <summary>
+        /// 微信api token
+        /// </summary>
+        public static string AccessToken { get; private set; }
 
-        public static int AccessTokenExpireTime { get; set; }
+        /// <summary>
+        /// 微信api token 失效时间，通常为2分钟
+        /// </summary>
+        public static int AccessTokenExpireTime { get; private set; }
 
-        public static DateTime LastTime { get; set; }
+        /// <summary>
+        /// 微信api token 的最后更新时间
+        /// </summary>
+        public static DateTime LastTime { get; private set; }
 
         /// <summary>
         /// 获取Access Token
@@ -27,15 +37,12 @@ namespace WX.Core
         /// <returns></returns>
         public async static Task GetAccessTokenAsync(string appId, string appSecret)
         {
-            HttpClient httpClient = new HttpClient();
-            string uriString = string.Format(WebConfigurationManager.AppSettings["ACCESStOKEN"] + "?grant_type=client_credential&appid={0}&secret={1}", appId, appSecret);
-            Uri requestUri = new Uri(uriString);
-            HttpResponseMessage response = await httpClient.GetAsync(requestUri);
-            response.EnsureSuccessStatusCode();
-            string json = await response.Content.ReadAsStringAsync();
-            if (!json.Contains("errcode"))
+            string strUrl = string.Format("{0}?grant_type=client_credential&appid={1}&secret={2}", WebConfigurationManager.AppSettings["ACCESStOKEN"], appId, appSecret),
+                    result = await HttpHelpers.GetAsync(strUrl);
+
+            if (!result.Contains("errcode"))
             {
-                JObject obj2 = JObject.Parse(json);
+                JObject obj2 = JObject.Parse(result);
                 AccessToken = obj2["access_token"].ToString();
                 AccessTokenExpireTime = int.Parse(obj2["expires_in"].ToString());
                 LastTime = DateTime.Now;
@@ -65,16 +72,8 @@ namespace WX.Core
         /// <returns></returns>
         public static async Task<string> CreateMenuAsync(string accessToken, string postJson)
         {
-            HttpClient httpClient = new HttpClient();
-
-            string strUrl = string.Format(WebConfigurationManager.AppSettings["CREATEMENU"] + "?access_token={0}", accessToken);
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var strUri = new Uri(strUrl);
-            HttpContent postContent = new StringContent(postJson);
-            HttpResponseMessage response = await httpClient.PostAsync(strUri, postContent);
-            response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
-
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["CREATEMENU"], accessToken),
+                result = await HttpHelpers.PostAsync(strUrl, postJson);
             return result;
         }
 
@@ -85,14 +84,8 @@ namespace WX.Core
         /// <returns></returns>
         public static async Task<string> GetMenuAsync(string accessToken)
         {
-            HttpClient httpClient = new HttpClient();
-
-            string strUrl = string.Format(WebConfigurationManager.AppSettings["LOADMENU"] + "?access_token={0}", accessToken);
-            var strUri = new Uri(strUrl);
-            HttpResponseMessage response = await httpClient.GetAsync(strUri);
-            response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
-
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["LOADMENU"], accessToken),
+                result = await HttpHelpers.GetAsync(strUrl);
             return result;
         }
 
@@ -103,14 +96,8 @@ namespace WX.Core
         /// <returns></returns>
         public static async Task<string> DeleteMenuAsync(string accessToken)
         {
-            HttpClient httpClient = new HttpClient();
-
-            string strUrl = string.Format(WebConfigurationManager.AppSettings["DELETEMENU"] + "?access_token={0}", accessToken);
-            var strUri = new Uri(strUrl);
-            HttpResponseMessage response = await httpClient.GetAsync(strUri);
-            response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
-
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["DELETEMENU"], accessToken),
+                result = await HttpHelpers.GetAsync(strUrl);
             return result;
         }
 
@@ -122,15 +109,8 @@ namespace WX.Core
         /// <returns></returns>
         public async static Task<string> GetMessageTemplateId(string accessToken, string postJson)
         {
-            HttpClient httpClient = new HttpClient();
-            string uriString = string.Format(WebConfigurationManager.AppSettings["GETMESSAGETEMPLATEID"] + "?access_token={0}", accessToken);
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            Uri requestUri = new Uri(uriString);
-            HttpContent content = new StringContent(postJson);
-            HttpResponseMessage response = await httpClient.PostAsync(requestUri, content);
-            response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
-
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["GETMESSAGETEMPLATEID"], accessToken),
+                result = await HttpHelpers.PostAsync(strUrl, postJson);
             return result;
         }
 
@@ -142,31 +122,21 @@ namespace WX.Core
         /// <returns></returns>
         public async static Task<string> SendTemplateMessageAsync(string accessToken, string postJson)
         {
-            HttpClient httpClient = new HttpClient();
-
-            string uriString = string.Format(WebConfigurationManager.AppSettings["SENDTEMPLATEMESSAGE"] + "?access_token={0}", accessToken);
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            Uri requestUri = new Uri(uriString);
-            HttpContent content = new StringContent(postJson);
-            HttpResponseMessage response = await httpClient.PostAsync(requestUri, content);
-            response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
-
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["SENDTEMPLATEMESSAGE"], accessToken),
+                result = await HttpHelpers.PostAsync(strUrl, postJson);
             return result;
         }
 
+        /// <summary>
+        /// 设置模板消息
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <param name="postJson"></param>
+        /// <returns></returns>
         public async static Task<string> SetMessageTemplate(string accessToken, string postJson)
         {
-            HttpClient httpClient = new HttpClient();
-
-            string uriString = string.Format(WebConfigurationManager.AppSettings["SETMESSAGETEMPLATE"] + "?access_token={0}", accessToken);
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            Uri requestUri = new Uri(uriString);
-            HttpContent content = new StringContent(postJson);
-            HttpResponseMessage response = await httpClient.PostAsync(requestUri, content);
-            response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
-
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["SETMESSAGETEMPLATE"], accessToken),
+                result = await HttpHelpers.PostAsync(strUrl, postJson);
             return result;
         }
 

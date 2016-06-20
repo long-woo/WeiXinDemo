@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WX.Core", "WX.Core\WX.Core.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WXTest", "WXTest\WXTest.csproj", "{D093E1C1-4452-43E0-B603-8D04AF5BC012}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WX.Common", "WX.Common\WX.Common.csproj", "{C7BDF926-A6BB-4676-B89B-DCAC1E4A0A60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{D093E1C1-4452-43E0-B603-8D04AF5BC012}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D093E1C1-4452-43E0-B603-8D04AF5BC012}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D093E1C1-4452-43E0-B603-8D04AF5BC012}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7BDF926-A6BB-4676-B89B-DCAC1E4A0A60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7BDF926-A6BB-4676-B89B-DCAC1E4A0A60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7BDF926-A6BB-4676-B89B-DCAC1E4A0A60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7BDF926-A6BB-4676-B89B-DCAC1E4A0A60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
