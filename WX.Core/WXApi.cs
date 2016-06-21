@@ -102,32 +102,6 @@ namespace WX.Core
         }
 
         /// <summary>
-        /// 获取模板消息Id
-        /// </summary>
-        /// <param name="accessToken"></param>
-        /// <param name="postJson"></param>
-        /// <returns></returns>
-        public async static Task<string> GetMessageTemplateId(string accessToken, string postJson)
-        {
-            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["GETMESSAGETEMPLATEID"], accessToken),
-                result = await HttpHelpers.PostAsync(strUrl, postJson);
-            return result;
-        }
-
-        /// <summary>
-        /// 发送模板消息
-        /// </summary>
-        /// <param name="accessToken"></param>
-        /// <param name="postJson"></param>
-        /// <returns></returns>
-        public async static Task<string> SendTemplateMessageAsync(string accessToken, string postJson)
-        {
-            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["SENDTEMPLATEMESSAGE"], accessToken),
-                result = await HttpHelpers.PostAsync(strUrl, postJson);
-            return result;
-        }
-
-        /// <summary>
         /// 设置所属行业
         /// </summary>
         /// <param name="accessToken"></param>
@@ -193,5 +167,19 @@ namespace WX.Core
                 result = await HttpHelpers.PostAsync(strUrl, postJson);
             return result;
         }
+
+        /// <summary>
+        /// 发送模板消息
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <param name="postJson"></param>
+        /// <returns></returns>
+        public async static Task<string> SendTemplateMessageAsync(string accessToken, string postJson)
+        {
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["SENDTEMPLATEMESSAGE"], accessToken),
+                result = await HttpHelpers.PostAsync(strUrl, postJson);
+            return result;
+        }
+
     }
 }
