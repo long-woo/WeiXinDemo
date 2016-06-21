@@ -128,17 +128,70 @@ namespace WX.Core
         }
 
         /// <summary>
-        /// 设置模板消息
+        /// 设置所属行业
         /// </summary>
         /// <param name="accessToken"></param>
-        /// <param name="postJson"></param>
+        /// <param name="postJson">
+        /// {"industry_id1":"1","industry_id2":"4"}
+        /// </param>
         /// <returns></returns>
-        public async static Task<string> SetMessageTemplate(string accessToken, string postJson)
+        public async static Task<string> SetIndustry(string accessToken, string postJson)
         {
-            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["SETMESSAGETEMPLATE"], accessToken),
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["SETINDUSTRY"], accessToken),
                 result = await HttpHelpers.PostAsync(strUrl, postJson);
             return result;
         }
 
+        /// <summary>
+        /// 获取设置的行业信息
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <returns></returns>
+        public async static Task<string> GetIndustry(string accessToken)
+        {
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["GETINDUSTRY"], accessToken),
+                result = await HttpHelpers.GetAsync(strUrl);
+            return result;
+        }
+
+        /// <summary>
+        /// 获得模板ID
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <param name="postJson">
+        /// {"template_id_short":"TM00015"}
+        /// </param>
+        /// <returns></returns>
+        public async static Task<string> GetTemplateId(string accessToken, string postJson)
+        {
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["GETTEMPLATEID"], accessToken),
+                result = await HttpHelpers.PostAsync(strUrl, postJson);
+            return result;
+        }
+
+        /// <summary>
+        /// 获取模板列表，非模板库的列表
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <returns></returns>
+        public async static Task<string> GetPrivateTemplates(string accessToken)
+        {
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["GETPRIVATETEMPLATE"], accessToken),
+               result = await HttpHelpers.GetAsync(strUrl);
+            return result;
+        }
+
+        /// <summary>
+        /// 删除模板
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <param name="postJson"></param>
+        /// <returns></returns>
+        public async static Task<string> DeletePrivateTemplate(string accessToken,string postJson)
+        {
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["DeletePRIVATETEMPLATE"], accessToken),
+                result = await HttpHelpers.PostAsync(strUrl, postJson);
+            return result;
+        }
     }
 }
