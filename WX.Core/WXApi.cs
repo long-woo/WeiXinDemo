@@ -15,7 +15,7 @@ namespace WX.Core
     {
 
         /// <summary>
-        /// 微信api token
+        /// 微信api token （调用接口凭证）
         /// </summary>
         public static string AccessToken { get; private set; }
 
@@ -29,13 +29,42 @@ namespace WX.Core
         /// </summary>
         public static DateTime LastTime { get; private set; }
 
+        public WXApi(string appId, string appSecret)
+        {
+            DateTime expireTime = LastTime.AddSeconds(AccessTokenExpireTime);
+            if (DateTime.Now >= expireTime || string.IsNullOrEmpty(AccessToken))
+            {
+                GetAccessToken(appId, appSecret);
+            }
+        }
+
         /// <summary>
-        /// 获取Access Token
+        /// 获取Access Token （同步）
+        /// </summary>
+        /// <param name="corpId">应用Id</param>
+        /// <param name="corpSecret">应用密钥</param>
+        /// <returns></returns>
+        public void GetAccessToken(string appId, string appSecret)
+        {
+            string strUrl = string.Format("{0}?grant_type=client_credential&appid={1}&secret={2}", WebConfigurationManager.AppSettings["ACCESStOKEN"], appId, appSecret),
+               result = HttpHelpers.GetSync(strUrl);
+
+            if (!result.Contains("errcode"))
+            {
+                JObject jObj = JObject.Parse(result);
+                AccessToken = jObj["access_token"].ToString();
+                AccessTokenExpireTime = int.Parse(jObj["expires_in"].ToString());
+                LastTime = DateTime.Now;
+            }
+        }
+
+        /// <summary>
+        /// 获取Access Token 异步
         /// </summary>
         /// <param name="appId">应用Id</param>
         /// <param name="appSecret">应用密钥</param>
         /// <returns></returns>
-        public async static Task GetAccessTokenAsync(string appId, string appSecret)
+        public async Task GetAccessTokenAsync(string appId, string appSecret)
         {
             string strUrl = string.Format("{0}?grant_type=client_credential&appid={1}&secret={2}", WebConfigurationManager.AppSettings["ACCESStOKEN"], appId, appSecret),
                     result = await HttpHelpers.GetAsync(strUrl);
@@ -50,29 +79,13 @@ namespace WX.Core
         }
 
         /// <summary>
-        /// 刷新 access token 
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="appSecret"></param>
-        /// <returns></returns>
-        public async static Task RefreshAccessToken(string appId, string appSecret)
-        {
-            DateTime expireTime = LastTime.AddSeconds((double)AccessTokenExpireTime);
-            if (DateTime.Now >= expireTime)
-            {
-                await GetAccessTokenAsync(appId, appSecret);
-            }
-        }
-
-        /// <summary>
         /// 创建菜单
         /// </summary>
-        /// <param name="accessToken"></param>
         /// <param name="postJson"></param>
         /// <returns></returns>
-        public static async Task<string> CreateMenuAsync(string accessToken, string postJson)
+        public async Task<string> CreateMenuAsync(string postJson)
         {
-            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["CREATEMENU"], accessToken),
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["CREATEMENU"], AccessToken),
                 result = await HttpHelpers.PostAsync(strUrl, postJson);
             return result;
         }
@@ -80,11 +93,10 @@ namespace WX.Core
         /// <summary>
         /// 获取菜单
         /// </summary>
-        /// <param name="accessToken"></param>
         /// <returns></returns>
-        public static async Task<string> GetMenuAsync(string accessToken)
+        public async Task<string> GetMenuAsync()
         {
-            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["LOADMENU"], accessToken),
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["LOADMENU"], AccessToken),
                 result = await HttpHelpers.GetAsync(strUrl);
             return result;
         }
@@ -92,11 +104,10 @@ namespace WX.Core
         /// <summary>
         /// 删除菜单
         /// </summary>
-        /// <param name="accessToken"></param>
         /// <returns></returns>
-        public static async Task<string> DeleteMenuAsync(string accessToken)
+        public async Task<string> DeleteMenuAsync()
         {
-            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["DELETEMENU"], accessToken),
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["DELETEMENU"], AccessToken),
                 result = await HttpHelpers.GetAsync(strUrl);
             return result;
         }
@@ -104,14 +115,13 @@ namespace WX.Core
         /// <summary>
         /// 设置所属行业
         /// </summary>
-        /// <param name="accessToken"></param>
         /// <param name="postJson">
         /// {"industry_id1":"1","industry_id2":"4"}
         /// </param>
         /// <returns></returns>
-        public async static Task<string> SetIndustry(string accessToken, string postJson)
+        public async Task<string> SetIndustry(string postJson)
         {
-            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["SETINDUSTRY"], accessToken),
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["SETINDUSTRY"], AccessToken),
                 result = await HttpHelpers.PostAsync(strUrl, postJson);
             return result;
         }
@@ -119,11 +129,10 @@ namespace WX.Core
         /// <summary>
         /// 获取设置的行业信息
         /// </summary>
-        /// <param name="accessToken"></param>
         /// <returns></returns>
-        public async static Task<string> GetIndustry(string accessToken)
+        public async Task<string> GetIndustry()
         {
-            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["GETINDUSTRY"], accessToken),
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["GETINDUSTRY"], AccessToken),
                 result = await HttpHelpers.GetAsync(strUrl);
             return result;
         }
@@ -131,14 +140,13 @@ namespace WX.Core
         /// <summary>
         /// 获得模板ID
         /// </summary>
-        /// <param name="accessToken"></param>
         /// <param name="postJson">
         /// {"template_id_short":"TM00015"}
         /// </param>
         /// <returns></returns>
-        public async static Task<string> GetTemplateId(string accessToken, string postJson)
+        public async Task<string> GetTemplateId(string postJson)
         {
-            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["GETTEMPLATEID"], accessToken),
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["GETTEMPLATEID"], AccessToken),
                 result = await HttpHelpers.PostAsync(strUrl, postJson);
             return result;
         }
@@ -146,11 +154,10 @@ namespace WX.Core
         /// <summary>
         /// 获取模板列表，非模板库的列表
         /// </summary>
-        /// <param name="accessToken"></param>
         /// <returns></returns>
-        public async static Task<string> GetPrivateTemplates(string accessToken)
+        public async Task<string> GetPrivateTemplates()
         {
-            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["GETPRIVATETEMPLATE"], accessToken),
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["GETPRIVATETEMPLATE"], AccessToken),
                result = await HttpHelpers.GetAsync(strUrl);
             return result;
         }
@@ -158,12 +165,11 @@ namespace WX.Core
         /// <summary>
         /// 删除模板
         /// </summary>
-        /// <param name="accessToken"></param>
         /// <param name="postJson"></param>
         /// <returns></returns>
-        public async static Task<string> DeletePrivateTemplate(string accessToken,string postJson)
+        public async Task<string> DeletePrivateTemplate(string postJson)
         {
-            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["DeletePRIVATETEMPLATE"], accessToken),
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["DeletePRIVATETEMPLATE"], AccessToken),
                 result = await HttpHelpers.PostAsync(strUrl, postJson);
             return result;
         }
@@ -171,12 +177,11 @@ namespace WX.Core
         /// <summary>
         /// 发送模板消息
         /// </summary>
-        /// <param name="accessToken"></param>
         /// <param name="postJson"></param>
         /// <returns></returns>
-        public async static Task<string> SendTemplateMessageAsync(string accessToken, string postJson)
+        public async Task<string> SendTemplateMessageAsync(string postJson)
         {
-            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["SENDTEMPLATEMESSAGE"], accessToken),
+            string strUrl = string.Format("{0}?access_token={1}", WebConfigurationManager.AppSettings["SENDTEMPLATEMESSAGE"], AccessToken),
                 result = await HttpHelpers.PostAsync(strUrl, postJson);
             return result;
         }

@@ -17,8 +17,8 @@ namespace WX.Web.Controllers
         [ValidateAntiForgeryToken, HttpPost]
         public async Task<ActionResult> CreateMenu(string jsonMenu)
         {
-            await WXApi.RefreshAccessToken(APPID, APPSECRET);
-            string content = await WXApi.CreateMenuAsync(WXApi.AccessToken, jsonMenu);
+            WXApi wxapi = new WXApi(APPID, APPSECRET);
+            string content = await wxapi.CreateMenuAsync(jsonMenu);
             return this.Content(content);
         }
 

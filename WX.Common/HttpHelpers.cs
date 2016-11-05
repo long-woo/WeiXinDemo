@@ -13,6 +13,27 @@ namespace WX.Common
         private static readonly HttpClient httpClient = new HttpClient();
 
         /// <summary>
+        /// Http Get 请求 （同步）
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public static string GetSync(string url)
+        {
+            try
+            {
+                Task<HttpResponseMessage> taskResponse = null;
+                Uri uri = new Uri(url);
+                taskResponse = httpClient.GetAsync(uri);
+                string result = taskResponse.Result.Content.ReadAsStringAsync().Result.ToString();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return string.Format("错误：{0}！", ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Http Get 请求
         /// </summary>
         /// <param name="url"></param>

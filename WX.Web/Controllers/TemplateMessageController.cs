@@ -23,8 +23,8 @@ namespace WX.Web.Controllers
         [ValidateAntiForgeryToken, HttpPost]
         public async Task<ActionResult> SendTemplateMessage(string jsonTPMessage)
         {
-            await WXApi.RefreshAccessToken(APPID, APPSECRET);
-            string content = await WXApi.SendTemplateMessageAsync(WXApi.AccessToken, jsonTPMessage);
+            WXApi wxapi = new WXApi(APPID, APPSECRET);
+            string content = await wxapi.SendTemplateMessageAsync(jsonTPMessage);
             return this.Content(content);
         }
 
