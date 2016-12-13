@@ -54,6 +54,7 @@
     <Compile Include="ReceiveMessageEnum.cs" />
     <Compile Include="WXApi.cs" />
     <Compile Include="WXBizMsgCrypt.cs" />
+    <Compile Include="WXCorpApi.cs" />
     <Compile Include="WXLog.cs" />
     <Compile Include="WXReceiveMessageModel.cs" />
   </ItemGroup>
