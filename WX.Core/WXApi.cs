@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,9 +7,9 @@ using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using System.Web.Configuration;
 using System.Net.Http.Headers;
-using WX.Common;
+using System.Security.Cryptography;
 
-namespace WX.Core
+namespace Loan.WebCore
 {
     public class WXApi
     {
@@ -20,14 +20,29 @@ namespace WX.Core
         public static string AccessToken { get; private set; }
 
         /// <summary>
-        /// 微信api token 失效时间，通常为2分钟
+        /// 微信api token失效时间，通常为2分钟
         /// </summary>
         public static int AccessTokenExpireTime { get; private set; }
 
         /// <summary>
-        /// 微信api token 的最后更新时间
+        /// 微信api token的最后更新时间
         /// </summary>
         public static DateTime LastTime { get; private set; }
+
+        /// <summary>
+        /// js-api ticket
+        /// </summary>
+        public static string JSApiTicket { get; private set; }
+
+        /// <summary>
+        /// js-api ticket失效时间，通常为2分钟
+        /// </summary>
+        public static int JSApiTicketExpireTime { get; protected set; }
+
+        /// <summary>
+        /// js-api ticket的最后更新时间
+        /// </summary>
+        public static DateTime JSApiLastTime { get; protected set; }
 
         public WXApi(string appId, string appSecret)
         {
@@ -39,10 +54,52 @@ namespace WX.Core
         }
 
         /// <summary>
+        /// 获取js-api ticket
+        /// </summary>
+        /// <returns></returns>
+        public async Task GetJSApiTicketAsync()
+        {
+            string url = string.Format("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={0}&type=jsapi", AccessToken),
+                   result = await HttpHelpers.GetAsync(url);
+            var json = JObject.Parse(result);
+
+            if (json["errmsg"].ToString() == "ok")
+            {
+                JSApiTicket = json["ticket"].ToString();
+                JSApiTicketExpireTime = Convert.ToInt32(json["expires_in"]);
+                JSApiLastTime = DateTime.Now;
+            }
+        }
+
+        /// <summary>
+        /// 获取js-api签名
+        /// </summary>
+        /// <param name="timestamp">时间戳</param>
+        /// <param name="noncestr">随机字符串</param>
+        /// <param name="jsapi_ticket">ticket</param>
+        /// <param name="url">当前网页的URL，不包含#及其后面部分</param>
+        /// <returns></returns>
+        public static string GetJSApiSignature(string timestamp, string noncestr, string jsapi_ticket, string url)
+        {
+            var arrParam = new[] { jsapi_ticket, timestamp, noncestr, url }.OrderBy(p => p).ToArray(); // 参数排序后，转成数组
+            string strArrParam = string.Join("&", arrParam);
+            var sha1 = SHA1.Create();
+            var btSha1 = sha1.ComputeHash(Encoding.UTF8.GetBytes(strArrParam));
+
+            StringBuilder enText = new StringBuilder();
+            foreach (var b in btSha1)
+            {
+                enText.AppendFormat("{0:x2}", b);
+            }
+
+            return enText.ToString();
+        }
+
+        /// <summary>
         /// 获取Access Token （同步）
         /// </summary>
-        /// <param name="corpId">应用Id</param>
-        /// <param name="corpSecret">应用密钥</param>
+        /// <param name="appId">应用Id</param>
+        /// <param name="appSecret">应用密钥</param>
         /// <returns></returns>
         public void GetAccessToken(string appId, string appSecret)
         {
