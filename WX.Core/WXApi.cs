@@ -7,9 +7,10 @@ using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using System.Web.Configuration;
 using System.Net.Http.Headers;
+using WX.Common;
 using System.Security.Cryptography;
 
-namespace Loan.WebCore
+namespace WX.Core
 {
     public class WXApi
     {
